@@ -1,11 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Display </title>
-    <script src="script.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contoh AJAX</title>
+<style>
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+  }
+</style>
 </head>
 <body>
-    <h2>Tabel Buku</h2>
-    <div id="bookTable"></div>
+
+<table id="data-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nama</th>
+      <th>Jenis</th>
+      <th>Ukuran</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody id="data-body"></tbody>
+</table>
+
+<script>
+// Buat instance dari XMLHttpRequest
+var xhttp = new XMLHttpRequest();
+
+// Ketika permintaan selesai dilakukan
+xhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    // Tangkap respons dari server
+    var data = JSON.parse(this.responseText);
+    console.log(data);
+    // Tampilkan data dalam bentuk tabel
+    var tableBody = document.getElementById("data-body");
+    var html = "";
+    for (var i = 0; i < data.length; i++) {
+      html += "<tr>";
+      html += "<td>" + data[i].id + "</td>";
+      html += "<td>" + data[i].nama + "</td>";
+      html += "<td>" + data[i].jenis + "</td>";
+      html += "<td>" + data[i].ukuran + "</td>";
+      html += "<td><button onclick='hapusData(" + data[i].id + ")'>Hapus</button></td>";
+      html += "</tr>";
+    }
+    tableBody.innerHTML = html;
+  }
+};
+
+// Lakukan permintaan GET ke server
+xhttp.open("GET", "data.json", true);
+xhttp.send();
+
+// Fungsi untuk menghapus data
+function hapusData(id) {
+  if (confirm("Anda yakin ingin menghapus data dengan ID " + id + "?")) {
+    // Hapus baris dari tampilan
+    var row = document.getElementById("data-row-" + id);
+    row.parentNode.removeChild(row);
+
+    // Kirim permintaan untuk menghapus data dari server
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log("Data dengan ID " + id + " telah dihapus dari server.");
+      }
+    };
+    xhr.open("POST", "hapus.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send("id=" + id);
+  }
+}
+</script>
+
 </body>
 </html>

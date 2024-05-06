@@ -4,7 +4,7 @@
 $servername = "localhost";
 $username = "root"; // Ganti dengan username Anda
 $password = ""; // Ganti dengan password Anda
-$database = "design"; // Ganti dengan nama database Anda
+$database = "fashion1"; // Ganti dengan nama database Anda
 
 $conn = new mysqli($servername, $username, $password, $database);
 
@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 }
 
 // Query untuk mengambil data dari tabel
-$sql = "SELECT * FROM nama";
+$sql = "SELECT * FROM barang";
 $result = $conn->query($sql);
 
 if ($result) {
